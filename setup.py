@@ -14,7 +14,7 @@ setup(
     license='MIT',
     packages=find_packages(),
     install_requires=[],
-    keywords='conversion',
+    keywords='vmo, syvmo',
     classifiers= [
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
