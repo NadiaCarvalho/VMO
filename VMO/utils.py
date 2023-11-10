@@ -7,8 +7,8 @@ based on the code in https://github.com/wangsix/vmo/blob/master/vmo/VMO/oracle.p
 import numpy as np
 import time
 
-from VMO.oracles.fo import FO
-from VMO.oracles.vmo import VMO
+from .oracles.fo import FO
+from .oracles.vmo import VMO
 
 
 def _create_oracle(oracle_type, **kwargs):
