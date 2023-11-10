@@ -1,19 +1,18 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, find_namespace_packages
+import pathlib
 
-VERSION = '0.0.1'
-DESCRIPTION = 'SyVMO - '
-LONG_DESCRIPTION = 'A package that calculates a (Synchronous) Variable Markov Oracle from features'
+here = pathlib.Path(__file__).parent.resolve()
 
 setup(
     name="syvmo",
-    version=VERSION,
-    description=DESCRIPTION,
-    long_description=LONG_DESCRIPTION,
+    version='0.0.1',
+    description='SyVMO - ',
+    long_description=open('README.md').read(),
     author="Nádia Carvalho",
     author_email="nadiacarvalho118@gmail.com",
     license='MIT',
     packages=find_packages(),
-    install_requires=[],
+    install_requires=open('requirements.txt').read().splitlines(),
     keywords='vmo, syvmo',
     classifiers= [
         "Development Status :: 3 - Alpha",
