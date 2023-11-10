@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Build and Deploy
+name: Python Publish
 
 on:
   push:
