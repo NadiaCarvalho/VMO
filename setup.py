@@ -6,8 +6,11 @@ here = pathlib.Path(__file__).parent.resolve()
 try:
     requirements = open('requirements.txt').read().splitlines()
 except:
-    requirements = []
-    print("Couldn't install requirements")
+    try:
+        requirements = open('requires.txt').read().splitlines()
+    except:
+        requirements = []
+        print("Couldn't install requirements")
 
     
 setup(
