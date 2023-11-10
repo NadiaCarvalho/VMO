@@ -3,6 +3,13 @@ import pathlib
 
 here = pathlib.Path(__file__).parent.resolve()
 
+try:
+    requirements = open('requirements.txt').read().splitlines()
+except:
+    requirements = []
+    print("Couldn't install requirements")
+
+    
 setup(
     name="syvmo",
     version='0.0.1',
@@ -12,7 +19,7 @@ setup(
     author_email="nadiacarvalho118@gmail.com",
     license='MIT',
     packages=find_packages(),
-    install_requires=open('requirements.txt').read().splitlines(),
+    install_requires=requirements,
     keywords='vmo, syvmo',
     classifiers= [
         "Development Status :: 3 - Alpha",
