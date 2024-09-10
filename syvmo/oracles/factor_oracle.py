@@ -98,7 +98,9 @@ class FactorOracle:
         self.basic_attributes['data'].append(0)
 
     def reset(self, **kwargs):
-        """docstring"""
+        """
+        Reset parameters back to default values
+        """
         self.update_params(**kwargs)
         # Basic attributes
         self.basic_attributes['sfx'] = []
@@ -131,14 +133,43 @@ class FactorOracle:
         self.basic_attributes['data'].append(0)
 
     def update_params(self, **kwargs):
-        """Subclass this"""
+        """
+        Updates the oracle parameters with the provided values.
+    
+        Parameters:
+            **kwargs: Key-value pairs to update the oracle's parameters.
+        """
         self.params.update(kwargs)
 
     def add_state(self, new_symbol, method=None):
-        """Subclass this"""
+        """
+        Adds a new state to the oracle by associating it with a new symbol.
+    
+        Parameters:
+            new_symbol: The symbol to associate with the new state.
+            method: Optional method to determine how to add the state.
+        """
         self.basic_attributes['data'].append(new_symbol)
 
     def _condition(self, i, j):
+        """
+        Checks whether a given state satisfies whether a certain range or segment (from j to i) 
+        is sufficiently represented in the next state based on the length of its longest repeated suffix. 
+        
+        The method _condition returns True when:
+        - i is not the last state.
+        - The next state i + 1 has a repeated suffix that is at least as long as the current segment from j to i.
+
+        If both conditions are met, the method can proceed to encode or link states.
+
+        Parameters:
+            i: The index of the current state.
+            j: The index of the previous state.
+    
+        Returns:
+            bool: True if the condition is met, False otherwise.
+        """
+
         return ((i < self.statistics['n_states'] - 1)
                 and (self.basic_attributes['lrs'][i + 1] >= i - j + 1))
 
