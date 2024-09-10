@@ -289,7 +289,7 @@ class FactorOracle:
         return i_r, h_0, h_1
 
     def _ir_fixed(self, alpha=1.0):
-         """
+        """
         Computes a fixed information rate (IR) based on the number of clusters and maximum lrs.
     
         Parameters:
