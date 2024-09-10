@@ -92,11 +92,17 @@ class VMO(FactorOracle):
     def _complete_method(self, i, pi_1, suffix_candidate):
         """
         Handles state transitions and links when the complete method is used.
+        
+        The *complete* method ensures that the suffix links and transitions between states in the oracle are thoroughly created. 
+        It does so by evaluating all possible suffix candidates and selecting the best one based on the computed distances between symbols.
+        This makes it more computationally exhaustive than methods like "incremental," but it provides a more accurate model of the 
+        state transitions and repeated patterns in the sequence data.
 
         Args:
             i (int): The current state index.
             pi_1 (int): The previous state index.
-            suffix_candidate (list): A list of suffix candidates based on distance calculations.
+            suffix_candidate (list): A list of suffix candidates based on distance calculations. 
+                - A suffix candidate is a possible link to an earlier state in the oracle that shares a suffix with the new state being added.
         """
         if not suffix_candidate:
             self.basic_attributes['sfx'][i] = 0
