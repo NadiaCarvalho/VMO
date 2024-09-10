@@ -174,7 +174,13 @@ class FactorOracle:
                 and (self.basic_attributes['lrs'][i + 1] >= i - j + 1))
 
     def _encode(self):
-        """Routine for encoding structure"""
+        """
+        Internal routine for encoding the structure of the oracle using compression.
+    
+        Returns:
+            tuple: A tuple containing the code and compression ratio for the oracle.
+        """
+
         _code = []
         _compror = []
 
@@ -199,14 +205,24 @@ class FactorOracle:
         return _code, _compror
 
     def encode(self):
-        """Encoding structure"""
+        """
+        Encodes the oracle's structure and updates the compression attributes.
+    
+        Returns:
+            tuple: A tuple containing the oracle's code and compression ratio.
+        """
         _c, _cmpr = self._encode()
         self.comp_attributes['code'].extend(_c)
         self.comp_attributes['compror'].extend(_cmpr)
         return self.comp_attributes['code'], self.comp_attributes['compror']
 
     def segment(self):
-        """An non-overlap version Compror"""
+        """
+        Generates a non-overlapping version of the compression ratio (Compror).
+    
+        Returns:
+            list: A list of segments representing the oracle's non-overlapping compression.
+        """
         if not self.comp_attributes['seg']:
             j = 0
         else:
@@ -246,7 +262,15 @@ class FactorOracle:
         return self.comp_attributes['seg']
 
     def _ir(self, alpha=1.0):
-        """docstring"""
+        """
+        Computes the information rate (IR) based on the code words and entropy.
+    
+        Parameters:
+            alpha (float): A scaling factor for adjusting the information rate.
+    
+        Returns:
+            tuple: A tuple containing the information rate, h_0, and h_1 values.
+        """
         code, _ = self.encode()
         c_w = np.zeros(len(code))  # Number of code words
         for i, char in enumerate(code):
@@ -265,7 +289,15 @@ class FactorOracle:
         return i_r, h_0, h_1
 
     def _ir_fixed(self, alpha=1.0):
-        """docstring"""
+         """
+        Computes a fixed information rate (IR) based on the number of clusters and maximum lrs.
+    
+        Parameters:
+            alpha (float): A scaling factor for adjusting the information rate.
+    
+        Returns:
+            tuple: A tuple containing the fixed information rate, h_0, and h_1 values.
+        """
         code, _ = self.encode()
 
         h_0 = np.log2(self.num_clusters())
@@ -291,7 +323,15 @@ class FactorOracle:
         return i_r, h_0, h_1
 
     def _ir_cum(self, alpha=1.0):
-        """docstring"""
+        """
+        Computes the cumulative information rate (IR) by considering the appearance of new states.
+    
+        Parameters:
+            alpha (float): A scaling factor for adjusting the information rate.
+    
+        Returns:
+            tuple: A tuple containing the cumulative information rate, h_0, and h_1 values.
+        """
         code, _ = self.encode()
         states = self.statistics['n_states']
 
@@ -324,7 +364,15 @@ class FactorOracle:
         return i_r, h_0, h_1
 
     def _ir_cum2(self, alpha=1.0):
-        """docstring"""
+        """
+        Computes a second version of cumulative information rate (IR) based on state counts.
+    
+        Parameters:
+            alpha (float): A scaling factor for adjusting the information rate.
+    
+        Returns:
+            tuple: A tuple containing the cumulative information rate, h_0, and h_1 values.
+        """
         code, _ = self.encode()
         states = self.statistics['n_states']
         # b_l is the b_lock length of compror codewords
@@ -351,7 +399,15 @@ class FactorOracle:
         return i_r, h_0, h_1
 
     def _ir_cum3(self, alpha=1.0):
-        """docstring"""
+        """
+        Computes a third version of cumulative information rate (IR) based on symbol appearance.
+    
+        Parameters:
+            alpha (float): A scaling factor for adjusting the information rate.
+    
+        Returns:
+            tuple: A tuple containing the cumulative information rate, h_0, and h_1 values.
+        """
         h_0 = np.log2(
             np.cumsum([1.0 if sfx == 0 else 0.0 for sfx in self.basic_attributes['sfx'][1:]]))
         h_1 = np.array([h if m == 0 else (h + np.log2(m)) / m
@@ -362,7 +418,16 @@ class FactorOracle:
         return i_r, h_0, h_1
 
     def i_r(self, alpha=1.0, ir_type='cum'):
-        """docstring"""
+        """
+        Computes the information rate (IR) based on the specified IR type.
+    
+        Parameters:
+            alpha (float): A scaling factor for adjusting the information rate.
+            ir_type (str): The type of IR to compute ('cum', 'all', 'fixed', 'cum2', 'cum3').
+    
+        Returns:
+            tuple: A tuple containing the IR, h_0, and h_1 values.
+        """
         if ir_type == 'cum':
             return self._ir_cum(alpha)
         if ir_type == 'all':
@@ -377,30 +442,72 @@ class FactorOracle:
         return None
 
     def num_clusters(self):
-        """docstring"""
+        """
+        Returns the number of clusters based on reverse suffix links.
+    
+        Returns:
+            int: The number of clusters.
+        """
         return len(self.basic_attributes['rsfx'][0])
 
     def threshold(self):
-        """docstring"""
+        """
+        Retrieves the threshold value used by the oracle.
+    
+        Returns:
+            int: The threshold value.
+    
+        Raises:
+            ValueError: If the threshold is not set.
+        """
         if self.params.get('threshold'):
             return int(self.params.get('threshold'))
         raise ValueError("Threshold is not set!")
 
     def dfunc(self):
-        """docstring"""
+        """
+        Retrieves the distance function used by the oracle.
+    
+        Returns:
+            str: The name of the distance function.
+    
+        Raises:
+            ValueError: If the distance function is not set.
+        """
         if self.params.get('dfunc'):
             return self.params.get('dfunc')
         raise ValueError("dfunc is not set!")
 
     def dfunc_handle(self, data, b_vec):
-        """docstring"""
+        """
+        Applies the distance function handle to the provided data and vector.
+    
+        Parameters:
+            data: The data to compare.
+            b_vec: The comparison vector.
+    
+        Returns:
+            The result of the distance function.
+    
+        Raises:
+            ValueError: If the distance function handle is not set.
+        """
         if self.params['dfunc_handle']:
             fun = self.params['dfunc_handle']
             return fun(data, b_vec)
         raise ValueError("dfunc_handle is not set!")
 
     def _len_common_suffix(self, p_1, p_2):
-        """docstring"""
+        """
+        Computes the length of the common suffix between two states.
+    
+        Parameters:
+            p_1: The first state.
+            p_2: The second state.
+    
+        Returns:
+            int: The length of the common suffix.
+        """
         if p_2 == self.basic_attributes['sfx'][p_1]:
             return self.basic_attributes['lrs'][p_1]
         while self.basic_attributes['sfx'][p_2] != self.basic_attributes['sfx'][p_1] and p_2 != 0:
@@ -408,7 +515,16 @@ class FactorOracle:
         return min(self.basic_attributes['lrs'][p_1], self.basic_attributes['lrs'][p_2])
 
     def _find_better(self, i, symbol):
-        """docstring"""
+        """
+        Finds a better match for a given symbol based on the reverse suffix links.
+    
+        Parameters:
+            i: The index of the current state.
+            symbol: The symbol to match.
+    
+        Returns:
+            int or None: The index of the matching state, or None if no match is found.
+        """
         self.basic_attributes['rsfx'][self.basic_attributes['sfx'][i]].sort()
         for j in self.basic_attributes['rsfx'][self.basic_attributes['sfx'][i]]:
             new_symbol = self.basic_attributes['data'][j -
